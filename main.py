@@ -540,9 +540,9 @@ def main(page: Page):
 
                 # Save the new details
                 with open(new_file_path, "w") as file:
-                    file.write(f"Village Name: {new_name}\n",color="white")
-                    file.write(f"Original Language: {new_original_language}\n",color="white")
-                    file.write(f"Goal Language: {new_goal_language}\n",color="white")
+                    file.write(f"Village Name: {new_name}\n")
+                    file.write(f"Original Language: {new_original_language}\n")
+                    file.write(f"Goal Language: {new_goal_language}\n")
 
                 if village_name != new_name:
                     os.remove(old_file_path)
@@ -612,9 +612,9 @@ def main(page: Page):
                 counter += 1
 
             with open(file_path, "w") as file:
-                file.write(f"Village Name: {village_name}\n",color="white")
-                file.write(f"Original Language: {original_language}\n",color="white")
-                file.write(f"Goal Language: {goal_language}\n",color="white")
+                file.write(f"Village Name: {village_name}\n")
+                file.write(f"Original Language: {original_language}\n")
+                file.write(f"Goal Language: {goal_language}\n")
 
             village_name_input.value = ""
             original_language_input.value = ""
