@@ -41,8 +41,8 @@ def main(page: Page):
                     height=90,
                     border_radius=50,
                     content=CircleAvatar(
-                        opacity=0.8,
-                        foreground_image_url=""
+                        opacity=0.8
+                        #foreground_image_url=""
                     )
                 )
             ),
