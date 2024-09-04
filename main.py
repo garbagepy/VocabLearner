@@ -811,7 +811,7 @@ def main(page: Page):
                     alignment="spaceBetween",
                     controls=[
                         Container(on_click=lambda _: page.go("/"), content=Text("X",bgcolor="black",color="white", size=60)),
-                        Container(padding=padding.only(top=20), content=Text("Create a Village", size=32, weight="bold"))
+                        Container(padding=padding.only(top=20), content=Text("Create a Village", size=32, weight="bold",color="white"))
                     ]
                 ),
                 Container(height=20),
