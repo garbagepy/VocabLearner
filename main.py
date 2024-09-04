@@ -1,4 +1,5 @@
 import os
+import random
 from flet import *
 
 # Constants for colors
@@ -61,7 +62,7 @@ def main(page: Page):
     # Create switches with explicit labels
     switches.append(Switch(
         value=(active_switch_index == 0),
-        label="Original Order",
+        label="In Order (OG -> Trans)",
         label_style=TextStyle(color=colors.WHITE),
         active_color="#757575",
         thumb_color="#BDBDBD",
@@ -69,7 +70,7 @@ def main(page: Page):
     ))
     switches.append(Switch(
         value=(active_switch_index == 1),
-        label="Mode 2",
+        label="Reverse Order (OG -> Trans)",
         label_style=TextStyle(color=colors.WHITE),
         active_color="#757575",
         thumb_color="#BDBDBD",
@@ -77,7 +78,7 @@ def main(page: Page):
     ))
     switches.append(Switch(
         value=(active_switch_index == 2),
-        label="Mode 3",
+        label="Random (OG -> Trans)",
         label_style=TextStyle(color=colors.WHITE),
         active_color="#757575",
         thumb_color="#BDBDBD",
@@ -85,7 +86,7 @@ def main(page: Page):
     ))
     switches.append(Switch(
         value=(active_switch_index == 3),
-        label="Mode 4",
+        label="In Order (Trans -> OG)",
         label_style=TextStyle(color=colors.WHITE),
         active_color="#757575",
         thumb_color="#BDBDBD",
@@ -93,12 +94,30 @@ def main(page: Page):
     ))
     switches.append(Switch(
         value=(active_switch_index == 4),
-        label="Mode 5",
+        label="Reverse Order (Trans -> OG)",
         label_style=TextStyle(color=colors.WHITE),
         active_color="#757575",
         thumb_color="#BDBDBD",
         on_change=lambda e: switch_changed(e, 4)
     ))
+    switches.append(Switch(
+        value=(active_switch_index == 5),
+        label="Random (Trans -> OG)",
+        label_style=TextStyle(color=colors.WHITE),
+        active_color="#757575",
+        thumb_color="#BDBDBD",
+        on_change=lambda e: switch_changed(e, 5)
+    ))
+    switches.append(Switch(
+        value=(active_switch_index == 6),
+        label="Random (Both Languages)",
+        label_style=TextStyle(color=colors.WHITE),
+        active_color="#757575",
+        thumb_color="#BDBDBD",
+        on_change=lambda e: switch_changed(e, 6)
+    ))
+
+
 
     # Function to load villages from files
     def load_villages():
@@ -122,7 +141,7 @@ def main(page: Page):
                         print(f"File {filename} does not have enough lines to parse.")
         return villages
 
-    def load_vocabulary_mode_0():
+    def load_vocabulary_mode_0():  # Original Order
         global active_switch_index
         if active_switch_index == 0:
             file_path = os.path.join("vocabulary_database", f"{selected_village}.txt")
@@ -138,10 +157,153 @@ def main(page: Page):
                             except ValueError:
                                 print(f"Error parsing line: {line.strip()}")
             # Print the success message
+            print("vocab mode 0 successfully loaded")
+            return vocab_list
+        else:
+            return []
+
+    def load_vocabulary_mode_1():  # Reverse Order
+        global active_switch_index
+        if active_switch_index == 1:
+            file_path = os.path.join("vocabulary_database", f"{selected_village}.txt")
+            vocab_list = []
+            if os.path.exists(file_path):
+                with open(file_path, "r") as file:
+                    lines = file.readlines()
+                    for line in lines[3:]:  # Skip the first 3 lines (village details)
+                        if ':' in line:
+                            try:
+                                vocab, translation, count = line.strip().split(":", 2)
+                                vocab_list.append({"vocab": vocab, "translation": translation, "count": count})
+                            except ValueError:
+                                print(f"Error parsing line: {line.strip()}")
+                # Reverse the vocab_list to have last vocabulary pair first
+                vocab_list.reverse()
+            # Print the success message
             print("vocab mode 1 successfully loaded")
             return vocab_list
         else:
-            print("Active switch index is not 0. Mode 0 vocabulary not loaded.")
+            return []
+
+    def load_vocabulary_mode_2():  # Random Order
+        global active_switch_index
+        if active_switch_index == 2:
+            file_path = os.path.join("vocabulary_database", f"{selected_village}.txt")
+            vocab_list = []
+            if os.path.exists(file_path):
+                with open(file_path, "r") as file:
+                    lines = file.readlines()
+                    for line in lines[3:]:
+                        if ':' in line:
+                            try:
+                                vocab, translation, count = line.strip().split(":", 2)
+                                vocab_list.append({"vocab": vocab, "translation": translation, "count": count})
+                            except ValueError:
+                                print(f"Error parsing line: {line.strip()}")
+                # Shuffle the vocab_list to randomize the order
+                random.shuffle(vocab_list)
+            # Print the success message
+            print("vocab mode 2 successfully loaded")
+            return vocab_list
+        else:
+            return []
+
+    def load_vocabulary_mode_3():  # Swapped Order (translation - vocabulary)
+        global active_switch_index
+        if active_switch_index == 3:
+            file_path = os.path.join("vocabulary_database", f"{selected_village}.txt")
+            vocab_list = []
+            if os.path.exists(file_path):
+                with open(file_path, "r") as file:
+                    lines = file.readlines()
+                    for line in lines[3:]:
+                        if ':' in line:
+                            try:
+                                vocab, translation, count = line.strip().split(":", 2)
+                                # Swap vocab and translation for this mode
+                                vocab_list.append({"vocab": translation, "translation": vocab, "count": count})
+                            except ValueError:
+                                print(f"Error parsing line: {line.strip()}")
+                # Shuffle the vocab_list to randomize the order
+                random.shuffle(vocab_list)
+            # Print the success message
+            print("vocab mode 3 successfully loaded")
+            return vocab_list
+        else:
+            return []
+
+    def load_vocabulary_mode_4():   #Reverse Order (Trans -> OG)
+        global active_switch_index
+        if active_switch_index == 4:  # Adjust this condition to match the mode
+            file_path = os.path.join("vocabulary_database", f"{selected_village}.txt")
+            vocab_list = []
+            if os.path.exists(file_path):
+                with open(file_path, "r") as file:
+                    lines = file.readlines()
+                    for line in lines[3:]:  # Skip the first 3 lines (village details)
+                        if ':' in line:
+                            try:
+                                vocab, translation, count = line.strip().split(":", 2)
+                                # Swap vocab and translation
+                                vocab_list.append({"vocab": translation, "translation": vocab, "count": count})
+                            except ValueError:
+                                print(f"Error parsing line: {line.strip()}")
+                # Reverse the vocab_list to have the last vocabulary pair first
+                vocab_list.reverse()
+            # Print the success message
+            print("vocab mode 4 successfully loaded")
+            return vocab_list
+        else:
+            return []
+
+    def load_vocabulary_mode_5():   #Random (Trans -> OG)
+        global active_switch_index
+        if active_switch_index == 5:  # Adjust this condition to match the mode
+            file_path = os.path.join("vocabulary_database", f"{selected_village}.txt")
+            vocab_list = []
+            if os.path.exists(file_path):
+                with open(file_path, "r") as file:
+                    lines = file.readlines()
+                    for line in lines[3:]:  # Skip the first 3 lines (village details)
+                        if ':' in line:
+                            try:
+                                vocab, translation, count = line.strip().split(":", 2)
+                                # Swap vocab and translation
+                                vocab_list.append({"vocab": translation, "translation": vocab, "count": count})
+                            except ValueError:
+                                print(f"Error parsing line: {line.strip()}")
+                # Shuffle the vocab_list to randomize the order
+                random.shuffle(vocab_list)
+            # Print the success message
+            print("vocab mode 5 successfully loaded")
+            return vocab_list
+        else:
+            return []
+
+    def load_vocabulary_mode_6():   # Completly Random (Anarchy!)
+        global active_switch_index
+        if active_switch_index == 6:
+            file_path = os.path.join("vocabulary_database", f"{selected_village}.txt")
+            vocab_list = []
+            if os.path.exists(file_path):
+                with open(file_path, "r") as file:
+                    lines = file.readlines()
+                    for line in lines[3:]:
+                        if ':' in line:
+                            try:
+                                vocab, translation, count = line.strip().split(":", 2)
+                                if random.choice([True, False]):
+                                    vocab_list.append({"vocab": vocab, "translation": translation, "count": count})
+                                else:
+                                    vocab_list.append({"vocab": translation, "translation": vocab, "count": count})
+                            except ValueError:
+                                print(f"Error parsing line: {line.strip()}")
+                # Shuffle the vocab_list to randomize the order
+                random.shuffle(vocab_list)
+            # Print the success message
+            print("vocab mode 6 successfully loaded")
+            return vocab_list
+        else:
             return []
 
     # Function to update categories card
@@ -294,16 +456,31 @@ def main(page: Page):
 
     def learning_page():
         # Create a Text control to display the vocabulary word to translate
-        learning_page_text_control = Text("Translate!", size=30, weight="bold",color="white")
+        learning_page_text_control = Text("Loading Failed!", size=30, weight="bold", color="white")
 
         # Create a TextField for user input
-        answer_input = TextField(label="Your Answer", border_color=PINK, width=400)
+        answer_input = TextField(label="Translation", border_color=PINK, width=400)
 
         # Create a Text control for feedback
-        feedback_text_control = Text("right/false", size=20, weight="bold",color="white")
+        feedback_text_control = Text("", size=20, weight="bold", color="white")
 
         # Load vocabulary for learning
-        vocab_list = load_vocabulary_mode_0()
+        vocab_list = []
+        if active_switch_index == 0:
+            vocab_list = load_vocabulary_mode_0()
+        elif active_switch_index == 1:
+            vocab_list = load_vocabulary_mode_1()
+        elif active_switch_index == 2:
+            vocab_list = load_vocabulary_mode_2()
+        elif active_switch_index == 3:
+            vocab_list = load_vocabulary_mode_3()
+        elif active_switch_index == 4:
+            vocab_list = load_vocabulary_mode_4()
+        elif active_switch_index == 5:
+            vocab_list = load_vocabulary_mode_5()
+        elif active_switch_index == 6:
+            vocab_list = load_vocabulary_mode_6()
+
         current_vocab_index = 0
 
         if vocab_list:
@@ -317,7 +494,7 @@ def main(page: Page):
             if answer:
                 correct_translation = vocab_list[current_vocab_index]['translation']
                 if answer.lower().strip() == correct_translation.lower().strip():
-                    feedback_text_control.value = "correct"
+                    feedback_text_control.value = "Correct :)"
                     current_vocab_index += 1
                     if current_vocab_index < len(vocab_list):
                         # Load the next vocab word
@@ -329,7 +506,7 @@ def main(page: Page):
                         learning_page_text_control.value = ""
                         answer_input.visible = False  # Hide the input field after finishing
                 else:
-                    feedback_text_control.value = vocab_list[current_vocab_index]['vocab']
+                    feedback_text_control.value = vocab_list[current_vocab_index]['translation']
 
                 page.update()  # Refresh the page to reflect the changes
             else:
@@ -346,9 +523,10 @@ def main(page: Page):
                     Row(
                         alignment="spaceBetween",
                         controls=[
-                            Container(on_click=lambda _: page.go("/village_options"), content=Text("Back",color="white", size=20)),
+                            Container(on_click=lambda _: page.go("/village_options"),
+                                      content=Text("Back", color="white", size=20)),
                             Container(padding=padding.only(top=20),
-                                      content=Text("Learning Page",color="white", size=32, weight="bold"))
+                                      content=Text("Learning Page", color="white", size=32, weight="bold"))
                         ]
                     ),
                     Container(
