@@ -42,7 +42,7 @@ def main(page: Page):
                     border_radius=50,
                     content=CircleAvatar(
                         opacity=0.8,
-                        foreground_image_url="https://scontent-fra5-1.cdninstagram.com/v/t51.2885-19/370866680_264982836337502_5942694946179275132_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent-fra5-1.cdninstagram.com&_nc_cat=102&_nc_ohc=QHYq3C67T6IQ7kNvgGNgN7E&edm=AEhyXUkBAAAA&ccb=7-5&oh=00_AYBqBEaCfkF9awFPe6KmGbjI6Kb1izwMvek3BLRCUHb1gw&oe=66D4F1B1&_nc_sid=8f1549"
+                        foreground_image_url=""
                     )
                 )
             ),
